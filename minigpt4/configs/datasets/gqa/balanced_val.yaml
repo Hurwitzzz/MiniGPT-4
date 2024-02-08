@@ -5,6 +5,7 @@
 
 datasets:
   gqa:
+    data_dir: /nfs/data2/jiameng/lavis/dataset/
     # data_dir: ${env.data_dir}/datasets
     data_type: images # [images|videos|features]
 
@@ -15,7 +16,7 @@ datasets:
           url:
               - https://storage.googleapis.com/sfr-vision-language-research/LAVIS/datasets/gqa/train_balanced_questions.json
           storage:
-              - /path/to/gqa/train_balanced_questions.json
+              - /nfs/data2/jiameng/lavis/dataset/gqa/train_balanced_questions.json
 
       images:
-          storage: /path/to/gqa/images
+          storage: /nfs/data2/jiameng/lavis/dataset/gqa/images

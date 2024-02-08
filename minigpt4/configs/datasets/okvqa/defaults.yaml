@@ -5,6 +5,7 @@
 
 datasets:
   ok_vqa:
+    data_dir: /nfs/data2/jiameng/lavis/dataset
     # data_dir: ${env.data_dir}/datasets
     data_type: images # [images|videos|features]
 
@@ -16,6 +17,6 @@ datasets:
               # TODO make this order insensitive
               - https://storage.googleapis.com/sfr-vision-language-research/LAVIS/datasets/okvqa/okvqa_train.json
           storage:
-              - /path/to/okvqa/okvqa_train.json
+              - /nfs/data2/jiameng/lavis/dataset/okvqa/okvqa_train.json
       images:
-          storage: /path/to/coco/images
+          storage: /nfs/data2/jiameng/lavis/dataset/coco/images
