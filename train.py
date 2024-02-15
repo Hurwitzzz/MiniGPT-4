@@ -90,7 +90,8 @@ def main():
     model = task.build_model(cfg)
 
     if cfg.run_cfg.wandb_log:
-        wandb.login()
+        # wandb.login()
+        wandb.login(key="3d3950bf0197bb6a4f59246bd3ddeacd1ae2617d")
         wandb.init(project="minigptv", name=cfg.run_cfg.job_name)
         wandb.watch(model)
 

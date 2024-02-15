@@ -9,7 +9,7 @@ from PIL import Image
 from tqdm import tqdm
 import torch
 from torch.utils.data import DataLoader
-from datasets import load_dataset
+# from datasets import load_dataset
 
 
 from minigpt4.datasets.datasets.vqa_datasets import OKVQAEvalData,VizWizEvalData,IconQAEvalData,GQAEvalData,VSREvalData,HMEvalData
@@ -174,36 +174,36 @@ if 'gqa' in args.dataset:
     with open(file_save_path,'w') as f:
         json.dump(minigpt4_predict, f)
 
-if 'vsr' in args.dataset:
-
-    img_path = cfg.evaluation_datasets_cfg["vsr"]["img_path"]
-    batch_size = cfg.evaluation_datasets_cfg["vsr"]["batch_size"]
-    max_new_tokens = cfg.evaluation_datasets_cfg["vsr"]["max_new_tokens"]
-
-    annotation = load_dataset("cambridgeltl/vsr_zeroshot", split='test')
-    data = VSREvalData(annotation, vis_processor, img_path)
-    eval_dataloader = DataLoader(data, batch_size=batch_size, shuffle=False)
-    count=0
-    total=0
-
-    minigpt4_predict = []
-
-    for images, texts, labels in tqdm(eval_dataloader):
-        texts = prepare_texts(texts, conv_temp)  # warp the texts with conversation template
-        answers = model.generate(images, texts, max_new_tokens=max_new_tokens, do_sample=False)
-
-        for answer, label in zip(answers, labels):
-            result = dict()
-            result['pred'] = answer.replace('<unk>','').strip()
-            result['gt'] = label
-            minigpt4_predict.append(result)
-            if answer.lower() ==  label.lower():
-                count+=1
-            total+=1
-    print('vsr test:', count / total * 100, flush=True)
-    file_save_path = os.path.join(save_path,"vsr.json")
-    with open(file_save_path,'w') as f:
-        json.dump(minigpt4_predict, f)
+# if 'vsr' in args.dataset:
+#
+#     img_path = cfg.evaluation_datasets_cfg["vsr"]["img_path"]
+#     batch_size = cfg.evaluation_datasets_cfg["vsr"]["batch_size"]
+#     max_new_tokens = cfg.evaluation_datasets_cfg["vsr"]["max_new_tokens"]
+#
+#     annotation = load_dataset("cambridgeltl/vsr_zeroshot", split='test')
+#     data = VSREvalData(annotation, vis_processor, img_path)
+#     eval_dataloader = DataLoader(data, batch_size=batch_size, shuffle=False)
+#     count=0
+#     total=0
+#
+#     minigpt4_predict = []
+#
+#     for images, texts, labels in tqdm(eval_dataloader):
+#         texts = prepare_texts(texts, conv_temp)  # warp the texts with conversation template
+#         answers = model.generate(images, texts, max_new_tokens=max_new_tokens, do_sample=False)
+#
+#         for answer, label in zip(answers, labels):
+#             result = dict()
+#             result['pred'] = answer.replace('<unk>','').strip()
+#             result['gt'] = label
+#             minigpt4_predict.append(result)
+#             if answer.lower() ==  label.lower():
+#                 count+=1
+#             total+=1
+#     print('vsr test:', count / total * 100, flush=True)
+#     file_save_path = os.path.join(save_path,"vsr.json")
+#     with open(file_save_path,'w') as f:
+#         json.dump(minigpt4_predict, f)
 
 if 'hm' in args.dataset:
 

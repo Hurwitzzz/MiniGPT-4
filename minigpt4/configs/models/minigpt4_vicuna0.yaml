@@ -15,7 +15,7 @@ model:
   # generation configs
   prompt: ""
 
-  llama_model: "please set this value to the path of vicuna model"
+  llama_model: "/cluster/scratch/jiezcao/jiameng/minigpt_model/vicuna7b/"#TODO
 
 preprocess:
     vis_processor:

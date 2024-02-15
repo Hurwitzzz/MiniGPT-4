@@ -229,7 +229,7 @@ datasets:
     sample_ratio: 8
 
   aok_vqa: 
-    batch_size: 1
+    batch_size: 6
     vis_processor:
       train:
         name: "blip2_image_train"

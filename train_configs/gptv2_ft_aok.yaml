@@ -4,8 +4,8 @@ model:
   max_txt_len: 1024
   image_size: 448
   end_sym: "</s>"
-  llama_model: "/nfs/data2/jiameng/minigpt_model/vicuna7b/"#TODO
-  ckpt: "/nfs/data2/jiameng/minigpt_model/checkpoint_stage3.pth"#TODO
+  llama_model: "/cluster/scratch/jiezcao/jiameng/minigpt_model/vicuna7b/"#TODO
+  ckpt: "/cluster/scratch/jiezcao/jiameng/minigpt_model/checkpoint_stage3.pth"#TODO
   use_grad_checkpoint: True
   chat_template: True
   lora_r: 64
@@ -32,18 +32,18 @@ run:
   warmup_lr: 1e-6
 
   weight_decay: 0.05
-  max_epoch: 50
+  max_epoch: 5
   num_workers: 4
   warmup_steps: 1000
   iters_per_epoch: 1000
 
   seed: 42
-  output_dir: "/nfs/data2/jiameng/minigpt/save_ckpt/"
+  output_dir: "/cluster/scratch/jiezcao/jiameng/minigpt_model/save_ckpt/aok/"
 
   amp: True
   resume_ckpt_path: null
 
-  evaluate: False 
+  evaluate: True
   train_splits: ["train"]
 
   device: "cuda"

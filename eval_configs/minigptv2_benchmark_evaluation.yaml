@@ -47,6 +47,11 @@ evaluation_datasets:
     img_path: /path/to/eval/image/path     
     max_new_tokens: 20
     batch_size: 10
+  aokvqa:
+    eval_file_path: /path/to/eval/annotation/path
+    img_path: /path/to/eval/image/path
+    max_new_tokens: 20
+    batch_size: 10
   vizwiz:
     eval_file_path: /path/to/eval/annotation/path  
     img_path: /path/to/eval/image/path    
@@ -71,7 +76,8 @@ evaluation_datasets:
 run:
   task: image_text_pretrain
   name: minigptv2_evaluation
-  save_path: /path/to/save/folder_path
+  save_path: /cluster/scratch/jiezcao/jiameng/minigpt_model/save_ckpt/eval/
+  
 
   
 
