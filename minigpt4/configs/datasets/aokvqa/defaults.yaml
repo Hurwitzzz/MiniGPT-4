@@ -18,4 +18,4 @@ datasets:
           storage:
               - /cluster/scratch/jiezcao/jiameng/dataset/aok/aokvqa_v1p0_train.json
       images:
-          storage: /cluster/scratch/jiezcao/jiameng/dataset/coco/train2014/
+          storage: /cluster/scratch/jiezcao/jiameng/dataset/coco/images/train2014/

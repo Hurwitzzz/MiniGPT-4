@@ -10,7 +10,7 @@ model:
 
 
 datasets:
-  gqa:
+  ok_vqa:
     batch_size: 6
     vis_processor:
       train:
@@ -35,10 +35,11 @@ run:
   warmup_steps: 200
 
   seed: 42
-  output_dir: "/cluster/scratch/jiezcao/jiameng/minigpt_model/save_ckpt/gqa/"
+  output_dir: "/cluster/scratch/jiezcao/jiameng/minigpt_model/save_ckpt/ok/adalink/"
 
   amp: True
-  resume_ckpt_path: null  
+  resume_ckpt_path:  null
+#  resume_ckpt_path: /cluster/scratch/jiezcao/jiameng/minigpt_model/save_ckpt/ok/adalink/20240215235/checkpoint_37.pth
 
   evaluate: False
   train_splits: ["train"]
@@ -49,4 +50,4 @@ run:
   distributed: True
 
   wandb_log: False
-  job_name: minigpt4_gqa
+  job_name: minigpt4_ok_adalink

@@ -1,0 +1,21 @@
+#datasets:
+#  vizwiz:
+#    data_type: images
+#    build_info:
+#      image_path: /cluster/scratch/jiezcao/jiameng/dataset/vizwiz/train
+#      annotations: /cluster/scratch/jiezcao/jiameng/dataset/vizwiz/train.json # ann_path
+datasets:
+  vizwiz:
+    data_dir: /cluster/scratch/jiezcao/jiameng/dataset/
+    data_type: images # [images|videos|features]
+
+    build_info:
+      annotations:
+        train:
+          url:
+              - https://vizwiz.cs.colorado.edu/VizWiz_final/vqa_data/Annotations.zip
+          storage:
+              - /cluster/scratch/jiezcao/jiameng/dataset/vizwiz/train.json
+
+      images:
+          storage: /cluster/scratch/jiezcao/jiameng/dataset/vizwiz/train

@@ -40,7 +40,7 @@ class OCRVQADataset(Dataset):
         with open(ann_path, 'r') as f:
             data = json.load(f)
         for k in data.keys():
-            if data[k]['split'] != 1: continue  # 1 for training, 2 for validation, 3 for test
+            if data[k]['split'] != 3: continue  # 1 for training, 2 for validation, 3 for test
             ext = os.path.splitext(data[k]['imageURL'])[1]
             imageFile = k + ext
             assert len(data[k]['questions']) == len(data[k]['answers'])

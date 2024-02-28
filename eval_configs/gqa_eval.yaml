@@ -5,11 +5,16 @@ model:
   end_sym: "###"
   low_resource: False
   prompt_template: '###Human: {} ###Assistant: '
-  ckpt: '/cluster/scratch/jiezcao/jiameng/minigpt_model/save_ckpt/gqa//checkpoint_4.pth'
+  ckpt: /cluster/scratch/jiezcao/jiameng/minigpt_model/save_ckpt/gqa/20240220103/checkpoint_9.pth
+#  ckpt: /cluster/scratch/jiezcao/jiameng/minigpt_model/save_ckpt/gqa/adalink/20240219213/checkpoint_9.pth
+#  ckpt: /cluster/scratch/jiezcao/jiameng/minigpt_model/save_ckpt/gqa/adalink/20240219204/checkpoint_9.pth
+#  ckpt: /cluster/scratch/jiezcao/jiameng/minigpt_model/save_ckpt/gqa/adalink/20240219194/checkpoint_9.pth
+#  ckpt: /cluster/scratch/jiezcao/jiameng/minigpt_model/save_ckpt/gqa/adalink/20240215214/checkpoint_45.pth
+#  ckpt: '/cluster/scratch/jiezcao/jiameng/minigpt_model/save_ckpt/gqa/20240215093/checkpoint_4.pth'
 
 
 datasets:
-  ok_vqa:
+  gqa:
     vis_processor:
       train:
         name: "blip2_image_eval"
@@ -19,12 +24,16 @@ datasets:
         name: "blip_caption"
 
 evaluation_datasets:
-  okvqa:
+  gqa:
     eval_file_path: /cluster/scratch/jiezcao/jiameng/dataset/gqa/
-    img_path: /cluster/scratch/jiezcao/jiameng/dataset/gqa/images/
+    img_path: /cluster/scratch/jiezcao/jiameng/dataset/gqa/images/train/
     max_new_tokens: 20
     batch_size: 10
 
 run:
   task: image_text_pretrain
-  save_path: "/cluster/scratch/jiezcao/jiameng/minigpt_model/save_ckpt/gqa//"
+  save_path: /cluster/scratch/jiezcao/jiameng/minigpt_model/save_ckpt/gqa/20240220103/
+#  save_path: /cluster/scratch/jiezcao/jiameng/minigpt_model/save_ckpt/gqa/adalink/20240219213/
+#  save_path: /cluster/scratch/jiezcao/jiameng/minigpt_model/save_ckpt/gqa/adalink/20240219204/
+#  save_path: /cluster/scratch/jiezcao/jiameng/minigpt_model/save_ckpt/gqa/adalink/20240219194/
+#  save_path: "/cluster/scratch/jiezcao/jiameng/minigpt_model/save_ckpt/gqa/20240215093/"

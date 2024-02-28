@@ -18,7 +18,7 @@ from minigpt4.datasets.datasets.aok_vqa_datasets import AOKVQADataset
 from minigpt4.datasets.datasets.coco_vqa_datasets import COCOVQADataset
 from minigpt4.datasets.datasets.ocrvqa_dataset import OCRVQADataset
 from minigpt4.datasets.datasets.coco_caption import COCOCapDataset
-
+from minigpt4.datasets.datasets.vizwiz_dataset import VizwizDataset
 
 @registry.register_builder("multitask_conversation")
 class MultitaskConversationBuilder(BaseDatasetBuilder):
@@ -314,7 +314,12 @@ class GQABuilder(BaseDatasetBuilder):
         "default": "configs/datasets/gqa/balanced_val.yaml",
     }
 
-
+@registry.register_builder("vizwiz")
+class GQABuilder(BaseDatasetBuilder):
+    train_dataset_cls = VizwizDataset
+    DATASET_CONFIG_DICT = {
+        "default": "configs/datasets/vizwiz/vizwiz.yaml",
+    }
 
 
 @registry.register_builder("flickr_grounded_caption")

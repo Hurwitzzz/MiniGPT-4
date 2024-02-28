@@ -11,7 +11,7 @@ model:
 
 datasets:
   ok_vqa:
-    batch_size: 12
+    batch_size: 6
     vis_processor:
       train:
         name: "blip2_image_train"
@@ -29,7 +29,7 @@ run:
   warmup_lr: 1e-6
 
   weight_decay: 0.05
-  max_epoch: 5
+  max_epoch: 10
   iters_per_epoch: 200
   num_workers: 4
   warmup_steps: 200
@@ -48,5 +48,5 @@ run:
   dist_url: "env://"
   distributed: True
 
-  wandb_log: True
-  job_name: minigpt4_finetune
+  wandb_log: False
+  job_name: minigpt4_ok

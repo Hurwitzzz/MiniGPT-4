@@ -1,0 +1,29 @@
+model:
+  arch: minigpt4
+  model_type: pretrain_vicuna0
+  max_txt_len: 160
+  end_sym: "###"
+  low_resource: False
+  prompt_template: '###Human: {} ###Assistant: '
+  ckpt: /cluster/scratch/jiezcao/jiameng/minigpt_model/save_ckpt/aok/adalink/20240222161/checkpoint_4.pth
+
+datasets:
+  aok_vqa:
+    vis_processor:
+      train:
+        name: "blip2_image_eval"
+        image_size: 224
+    text_processor:
+      train:
+        name: "blip_caption"
+
+evaluation_datasets:
+  aok_vqa:
+    eval_file_path: /cluster/scratch/jiezcao/jiameng/dataset/aok/
+    img_path: /cluster/scratch/jiezcao/jiameng/dataset/coco/images/val2017
+    max_new_tokens: 20
+    batch_size: 10
+    
+run:
+  task: image_text_pretrain
+  save_path: /cluster/scratch/jiezcao/jiameng/minigpt_model/save_ckpt/aok/adalink/20240222161/

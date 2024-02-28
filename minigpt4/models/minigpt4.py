@@ -57,6 +57,9 @@ class MiniGPT4(MiniGPTBase):
         )
 
         self.has_qformer = has_qformer
+        self.adalink_I = None
+        self.adalink_T = None
+        self.rank = 4
         if self.has_qformer:
             print('Loading Q-Former')
             self.Qformer, self.query_tokens = self.init_Qformer(
@@ -73,7 +76,19 @@ class MiniGPT4(MiniGPTBase):
         self.llama_proj = nn.Linear(
             img_f_dim, self.llama_model.config.hidden_size
         )
+        # freeze linear
+        # for param in self.llama_proj.parameters():
+        #     param.requires_grad = False
+        
+        # self.adalink_I = nn.Sequential(
+        #     nn.Linear(self.llama_model.config.hidden_size, self.rank),
+        #     nn.Linear(self.rank, self.llama_model.config.hidden_size)
+        # )
 
+        # self.adalink_T = nn.Sequential(
+        #     nn.Linear(self.t5_model.config.hidden_size, self.rank),  # 2048->4
+        #     nn.Linear(self.rank, self.t5_model.config.hidden_size)  # 4->2048
+        # )
         if prompt_path:
             with open(prompt_path, 'r') as f:
                 raw_prompts = f.read().splitlines()
@@ -122,7 +137,10 @@ class MiniGPT4(MiniGPTBase):
             image = image.reshape(-1, *image.shape[-3:])
 
         with self.maybe_autocast():
+            # print(image.size())#[bz,3,224,224]
+            # print(self.visual_encoder(image).size())
             image_embeds = self.ln_vision(self.visual_encoder(image)).to(device)
+            # print(image_embeds.size())# torch.Size([1, 257, 1408])
             if self.has_qformer:
                 image_atts = torch.ones(image_embeds.size()[:-1], dtype=torch.long).to(device)
 
@@ -133,7 +151,6 @@ class MiniGPT4(MiniGPTBase):
                     encoder_attention_mask=image_atts,
                     return_dict=True,
                 )
-
                 inputs_llama = self.llama_proj(query_output.last_hidden_state)
             else:
                 image_embeds = image_embeds[:, 1:, :]
@@ -141,6 +158,8 @@ class MiniGPT4(MiniGPTBase):
                 image_embeds = image_embeds.view(bs, int(pn / 4), int(hs * 4))
 
                 inputs_llama = self.llama_proj(image_embeds)
+            if self.adalink_I:
+                inputs_llama = inputs_llama + self.adalink_I(inputs_llama)#torch.Size([1, 32, 4096])
             atts_llama = torch.ones(inputs_llama.size()[:-1], dtype=torch.long).to(image.device)
         return inputs_llama, atts_llama
 

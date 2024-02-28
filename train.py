@@ -89,6 +89,8 @@ def main():
     datasets = task.build_datasets(cfg)
     model = task.build_model(cfg)
 
+    # export WANDB_DIR = '/cluster/scratch/jiezcao/jiameng/wandb/'
+
     if cfg.run_cfg.wandb_log:
         # wandb.login()
         wandb.login(key="3d3950bf0197bb6a4f59246bd3ddeacd1ae2617d")

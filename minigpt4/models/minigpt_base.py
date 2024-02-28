@@ -336,7 +336,8 @@ class MiniGPTBase(BaseModel):
         stopping_criteria = StoppingCriteriaList([StoppingCriteriaSub(
             stops=[torch.tensor([i]).to(self.device) for i in stop_words_ids])])
 
-        img_embeds, atts_img = self.encode_img(images.to(self.device))
+        img_embeds, atts_img = self.encode_img(images.to(self.device))#[1, 32, 4096], [1, 32]
+
         image_lists = [[image_emb[None]] for image_emb in img_embeds]
 
         batch_embs = [self.get_context_emb(text, img_list) for text, img_list in zip(texts, image_lists)]
@@ -347,13 +348,12 @@ class MiniGPTBase(BaseModel):
         dtype = batch_embs[0].dtype
         device = batch_embs[0].device
 
-        embs = torch.zeros([batch_size, max_len, emb_dim], dtype=dtype, device=device)
+        embs = torch.zeros([batch_size, max_len, emb_dim], dtype=dtype, device=device)#torch.Size([bz, 109, 4096])
         attn_mask = torch.zeros([batch_size, max_len], dtype=torch.int, device=device)
         for i, emb in enumerate(batch_embs):
             emb_len = emb.shape[1]
             embs[i, -emb_len:] = emb[0]
             attn_mask[i, -emb_len:] = 1
-
         with self.maybe_autocast():
             outputs = self.llama_model.generate(
                 inputs_embeds=embs,

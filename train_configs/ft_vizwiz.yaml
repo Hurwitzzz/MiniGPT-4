@@ -10,8 +10,8 @@ model:
 
 
 datasets:
-  gqa:
-    batch_size: 6
+  vizwiz:
+    batch_size: 10
     vis_processor:
       train:
         name: "blip2_image_train"
@@ -35,10 +35,10 @@ run:
   warmup_steps: 200
 
   seed: 42
-  output_dir: "/cluster/scratch/jiezcao/jiameng/minigpt_model/save_ckpt/gqa/"
+  output_dir: "/cluster/scratch/jiezcao/jiameng/minigpt_model/save_ckpt/vizwiz/"
 
   amp: True
-  resume_ckpt_path: null  
+  resume_ckpt_path: null
 
   evaluate: False
   train_splits: ["train"]
@@ -49,4 +49,4 @@ run:
   distributed: True
 
   wandb_log: False
-  job_name: minigpt4_gqa
+  job_name: minigpt4_vizwiz

@@ -5,7 +5,13 @@ model:
   end_sym: "###"
   low_resource: False
   prompt_template: '###Human: {} ###Assistant: '
-  ckpt: '/cluster/scratch/jiezcao/jiameng/minigpt_model/save_ckpt/ok/20240214214/checkpoint_4.pth'
+  ckpt: /cluster/scratch/jiezcao/jiameng/minigpt_model/save_ckpt/ok/20240220101/checkpoint_9.pth
+#  ckpt: /cluster/scratch/jiezcao/jiameng/minigpt_model/save_ckpt/ok/adalink/20240219213/checkpoint_9.pth
+#  ckpt: /cluster/scratch/jiezcao/jiameng/minigpt_model/save_ckpt/ok/adalink/20240219204/checkpoint_9.pth
+#  ckpt: /cluster/scratch/jiezcao/jiameng/minigpt_model/save_ckpt/ok/adalink/20240216081/checkpoint_4.pth
+#  ckpt: /cluster/scratch/jiezcao/jiameng/minigpt_model/save_ckpt/ok/adalink/20240216005/checkpoint_45.pth
+#  ckpt: /cluster/scratch/jiezcao/jiameng/minigpt_model/save_ckpt/ok/adalink/20240215210/checkpoint_4.pth
+#  ckpt: '/cluster/scratch/jiezcao/jiameng/minigpt_model/save_ckpt/ok/20240214214/checkpoint_4.pth'
 
 
 datasets:
@@ -27,4 +33,10 @@ evaluation_datasets:
     
 run:
   task: image_text_pretrain
-  save_path: "/cluster/scratch/jiezcao/jiameng/minigpt_model/save_ckpt/ok/20240214214/"
+  save_path: /cluster/scratch/jiezcao/jiameng/minigpt_model/save_ckpt/ok/20240220101/
+#  save_path: /cluster/scratch/jiezcao/jiameng/minigpt_model/save_ckpt/ok/adalink/20240219213/
+#  save_path: /cluster/scratch/jiezcao/jiameng/minigpt_model/save_ckpt/ok/adalink/20240219204/
+#  save_path: /adalink/2024021/cluster/scratch/jiezcao/jiameng/minigpt_model/save_ckpt/ok6081/
+#  save_path: /cluster/scratch/jiezcao/jiameng/minigpt_model/save_ckpt/ok/adalink/20240216005/
+#  save_path: /cluster/scratch/jiezcao/jiameng/minigpt_model/save_ckpt/ok/adalink/20240215210/
+#  save_path: "/cluster/scratch/jiezcao/jiameng/minigpt_model/save_ckpt/ok/20240214214/"

@@ -1,0 +1,34 @@
+model:
+  arch: minigpt4
+  model_type: pretrain_vicuna0
+  max_txt_len: 160
+  end_sym: "###"
+  low_resource: False
+  prompt_template: '###Human: {} ###Assistant: '
+  ckpt: /cluster/scratch/jiezcao/jiameng/minigpt_model/save_ckpt/vizwiz/20240225152/checkpoint_7.pth
+  #/cluster/scratch/jiezcao/jiameng/minigpt_model/prerained_minigpt4_7b.pth
+
+
+datasets:
+  vizwiz:
+    vis_processor:
+      train:
+        name: "blip2_image_eval"
+        image_size: 224
+    text_processor:
+      train:
+        name: "blip_caption"
+
+evaluation_datasets:
+  vizwiz:
+    eval_file_path: /cluster/scratch/jiezcao/jiameng/dataset/vizwiz/val.json
+    img_path: /cluster/scratch/jiezcao/jiameng/dataset/vizwiz/val/
+    max_new_tokens: 20
+    batch_size: 10
+    
+run:
+  task: image_text_pretrain
+  save_path: /cluster/scratch/jiezcao/jiameng/minigpt_model/save_ckpt/vizwiz/20240225152/
+
+
+

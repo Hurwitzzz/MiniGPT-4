@@ -12,12 +12,17 @@ from torch.utils.data import DataLoader
 # from datasets import load_dataset
 
 
+# os.environ['CUDA_VISIBLE_DEVICES'] = "0"
+# torch.backends.cudnn.benchmark = False
+# torch.backends.cudnn.enabled = False
+
 from minigpt4.datasets.datasets.vqa_datasets import OKVQAEvalData, VizWizEvalData, IconQAEvalData, GQAEvalData, \
-    VSREvalData, HMEvalData, AOKVQAEvalData
+    VSREvalData, HMEvalData, OCRVQAEvalData, AOKVQAEvalDataset
 from minigpt4.common.vqa_tools.VQA.PythonHelperTools.vqaTools.vqa import VQA
 from minigpt4.common.vqa_tools.VQA.PythonEvaluationTools.vqaEvaluation.vqaEval import VQAEval
-
+from minigpt4.datasets.datasets.ocrvqa_dataset import OCRVQADataset
 from minigpt4.common.eval_utils import prepare_texts, init_model, eval_parser
+from minigpt4.conversation.conversation import CONV_VISION_minigptv2,CONV_VISION_Vicuna0
 from minigpt4.conversation.conversation import CONV_VISION_minigptv2,CONV_VISION_Vicuna0
 from minigpt4.common.config import Config
 
@@ -59,7 +64,7 @@ if 'okvqa' in args.dataset:
         for answer, question_id, question, img_id in zip(answers, question_ids, questions, img_ids):
             result = dict()
             answer = answer.lower().replace('<unk>', '').strip()
-            answer=answer.split("###human:")[0]
+            answer = answer.split("###human:")[0]# delete prompt
             result['answer'] = answer
             result['question_id'] = int(question_id)
             minigpt4_predict.append(result)
@@ -79,46 +84,125 @@ if 'okvqa' in args.dataset:
     print("Overall OKVQA Accuracy is: %.02f\n" % (vqaEval.accuracy['overall']), flush=True)
 
 if 'aok_vqa' in args.dataset:
-
     eval_file_path = cfg.evaluation_datasets_cfg["aok_vqa"]["eval_file_path"]
-    img_path = cfg.evaluation_datasets_cfg["a_okvqa"]["img_path"]
+    img_path = cfg.evaluation_datasets_cfg["aok_vqa"]["img_path"]
     batch_size = cfg.evaluation_datasets_cfg["aok_vqa"]["batch_size"]
     max_new_tokens = cfg.evaluation_datasets_cfg["aok_vqa"]["max_new_tokens"]
 
-    evaluation_annntation_path = os.path.join(eval_file_path, "aok_vqa_test_split.json")
+    evaluation_annntation_path = os.path.join(eval_file_path, "aokvqa_v1p0_val.json") #"aokvqa_v1p0_test.json"
     with open(evaluation_annntation_path) as f:
-        ok_vqa_test_split = json.load(f)
-
-    data = OKVQAEvalData(ok_vqa_test_split, vis_processor, img_path)
+        aok_vqa_test_split = json.load(f)
+    data = AOKVQAEvalDataset(aok_vqa_test_split, vis_processor, img_path)#vis_processor, text_processor, vis_root, ann_paths
     eval_dataloader = DataLoader(data, batch_size=batch_size, shuffle=False)
     minigpt4_predict = []
+    count = 0
+    total = 0
 
-    for images, questions, question_ids, img_ids in eval_dataloader:
+    # data_iter = iter(eval_dataloader)
+    # batch_data = next(data_iter)
+    # print("第一次测试")
+    # print(type(batch_data))
+    # print(batch_data)
+
+    # image = self.vis_processor(image)
+    # question = self.text_processor(ann["question"])
+    # answer_key = "direct_answers"
+    # answer_weight = {}
+    # for answer in ann[answer_key]:
+    #     if answer in answer_weight.keys():
+    #         answer_weight[answer] += 1 / len(ann[answer_key])
+    #     else:
+    #         answer_weight[answer] = 1 / len(ann[answer_key])
+    # answers = list(answer_weight.keys())
+    # weights = list(answer_weight.values())
+    # answer = random.choices(answers, weights=weights, k=1)[0]
+
+    # for images, questions, question_ids,choices, correct_choice_idx, direct_answers in eval_dataloader:
+    for images, questions, question_ids, direct_answers in eval_dataloader:
         texts = prepare_texts(questions, conv_temp)  # warp the texts with conversation template
         answers = model.generate(images, texts, max_new_tokens=max_new_tokens, do_sample=False)
-
-        for answer, question_id, question, img_id in zip(answers, question_ids, questions, img_ids):
+        for answer,question_id, question, direct_answer in zip(answers, question_ids, questions, direct_answers):
             result = dict()
             answer = answer.lower().replace('<unk>', '').strip()
+            answer = answer.split("###human:")[0]# delete prompt
             result['answer'] = answer
-            result['question_id'] = int(question_id)
+            result['direct_answers'] = direct_answer
+            result['question_id'] = question_id
             minigpt4_predict.append(result)
+            if answer in direct_answer:
+                count+=1
+            total+=1
 
-    file_save_path = os.path.join(save_path, "aok_vqa.json")
+    file_save_path = os.path.join(save_path, "aokvqa.json")
     with open(file_save_path, 'w') as f:
         json.dump(minigpt4_predict, f)
 
-    annFile = os.path.join(eval_file_path, "aokvqa_v1p0_test.json")
-    quesFile = os.path.join(eval_file_path, "OpenEnded_mscoco_val2014_questions_clean.json")
-    evaluation_annntation_path = os.path.join(eval_file_path, "aokvqa_v1p0_test.json")
-    aok = json.load(open(evaluation_annntation_path))
-    data = GQAEvalData(aok, vis_processor, img_path)
-    vqa = VQA(annFile, quesFile)
-    vqaRes = vqa.loadRes(file_save_path, quesFile)
+    print('aok val:', count / total * 100, flush=True)
 
-    vqaEval = VQAEval(vqa, vqaRes, n=2)
-    vqaEval.evaluate()
-    print("Overall AOKVQA Accuracy is: %.02f\n" % (vqaEval.accuracy['overall']), flush=True)
+    # pred_qa_pairs = []
+    # question_id = samples["question_id"]
+    # gt_answers = samples["direct_answers"]
+    # 
+    # for pred_answer, ques_id, gt_answer in zip(answers, question_id, gt_answers):
+    #     pred_qa_pairs.append(
+    #         {"question_id": ques_id, "pred_ans": pred_answer, "gt_ans": gt_answer}
+    #     )
+    # return pred_qa_pairs
+
+
+if 'ocrvqa' in args.dataset:
+    eval_file_path = cfg.evaluation_datasets_cfg["ocrvqa"]["eval_file_path"]
+    root_path = cfg.evaluation_datasets_cfg["ocrvqa"]["img_path"]
+    batch_size = cfg.evaluation_datasets_cfg["ocrvqa"]["batch_size"]
+    max_new_tokens = cfg.evaluation_datasets_cfg["ocrvqa"]["max_new_tokens"]
+
+    with open(eval_file_path) as f:
+        ocr_vqa_test_split = json.load(f)
+    data = OCRVQADataset.create_data(root_path,eval_file_path)
+    # data = OCRVQAEvalData(ocr_vqa_test_split, vis_processor, root_path)
+    eval_dataloader = DataLoader(data, batch_size=batch_size, shuffle=False)
+    minigpt4_predict = []
+    count = 0
+    total = 0
+
+    # data_iter = iter(eval_dataloader)
+    # batch_data = next(data_iter)
+    # print("第一次测试")
+    # print(type(batch_data))
+    # print(batch_data)
+
+    for batch in eval_dataloader:
+        questions, gt_answers, image_paths, imags_ids, titles, genres = batch["question"], batch["answer"],batch["image_path"],batch["image_id"],batch["title"],batch["genre"]
+        # image process
+        tensors = []
+        for image_path in image_paths:
+            image = Image.open(os.path.join(root_path, image_path)).convert("RGB")
+            image = vis_processor(image)
+            tensors.append(image.unsqueeze(0))
+        images = torch.cat(tensors, dim=0)
+        # pred answers
+        # print(images.size())# torch.tensor[10, 3, 224, 224]
+        # print(len(questions))# tuple, len=10
+        texts = prepare_texts(questions, conv_temp)  # warp the texts with conversation template
+        answers = model.generate(images, texts, max_new_tokens=max_new_tokens, do_sample=False)
+        for question, gt_answer, answer in zip(questions, gt_answers, answers):
+            result = dict()
+            answer = answer.lower().replace('<unk>', '').strip()
+            answer = answer.split("###human:")[0]# delete prompt
+            result['question'] = question
+            result['answer'] = answer
+            result['gt_answer'] = gt_answer
+            minigpt4_predict.append(result)
+            if answer.lower()==gt_answer.lower():
+                count+=1
+            total+=1
+            print("count / total",count, total)
+
+
+    file_save_path = os.path.join(save_path, "ocrvqa.json")
+    with open(file_save_path, 'w') as f:
+        json.dump(minigpt4_predict, f)
+    print('OCR Acc: ', count / total * 100, flush=True)
 
 if 'vizwiz' in args.dataset:
 
@@ -140,13 +224,16 @@ if 'vizwiz' in args.dataset:
                                      repetition_penalty=1.0)
 
         for answer, gt_answer in zip(answers, gt_answers):
+            answer=answer.lower().replace('<unk>', '').strip()
+            answer=answer.split("###human:")[0]  # delete prompt
             result = dict()
-            result['answer'] = answer.replace('<unk>', '').strip()
+            result['answer'] = answer
+            result['gt_answer'] = gt_answer
             minigpt4_predict.append(result)
             count = 0
             gt_answer = gt_answer.split('_')
             for gt in gt_answer:
-                if gt.lower() == answer.lower():
+                if gt.lower() in answer:
                     count += 1
             acc = min(count / 3.0, 1.0)
             total_acc.append(acc)
@@ -155,6 +242,7 @@ if 'vizwiz' in args.dataset:
     with open(file_save_path, 'w') as f:
         json.dump(minigpt4_predict, f)
     print('vizwiz Acc: ', np.average(total_acc) * 100.0, flush=True)
+
 
 if 'iconvqa' in args.dataset:
 
@@ -204,8 +292,9 @@ if 'gqa' in args.dataset:
 
         for answer, label in zip(answers, labels):
             result = dict()
-            answer = answer.split("###human:")[0]
-            result['pred'] = answer.lower().replace('<unk>', '').strip()
+            answer = answer.lower().replace('<unk>', '').strip()
+            answer = answer.split("###human")[0]
+            result['pred'] = answer
             result['gt'] = label
             minigpt4_predict.append(result)
             if answer.lower() == label:

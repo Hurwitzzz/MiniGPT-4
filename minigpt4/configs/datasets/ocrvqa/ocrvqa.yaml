@@ -2,5 +2,5 @@ datasets:
   ocrvqa:
     data_type: images
     build_info:
-      image_path: /cluster/scratch/jiezcao/jiameng/dataset/ocrvqa/images
-      ann_path: /cluster/scratch/jiezcao/jiameng/dataset/ocrvqa/dataset.json
+      image_path: /cluster/scratch/jiezcao/jiameng/dataset/ocr_vqa/images
+      ann_path: /cluster/scratch/jiezcao/jiameng/dataset/ocr_vqa/dataset.json
