@@ -315,7 +315,7 @@ class GQABuilder(BaseDatasetBuilder):
     }
 
 @registry.register_builder("vizwiz")
-class GQABuilder(BaseDatasetBuilder):
+class VIZWIZBuilder(BaseDatasetBuilder):
     train_dataset_cls = VizwizDataset
     DATASET_CONFIG_DICT = {
         "default": "configs/datasets/vizwiz/vizwiz.yaml",

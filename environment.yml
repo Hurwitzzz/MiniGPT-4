@@ -1,4 +1,4 @@
-name: minigptv
+name: vlm_fed
 channels:
   - pytorch
   - defaults

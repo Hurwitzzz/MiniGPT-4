@@ -93,8 +93,8 @@ def main():
 
     if cfg.run_cfg.wandb_log:
         # wandb.login()
-        wandb.login(key="3d3950bf0197bb6a4f59246bd3ddeacd1ae2617d")
-        wandb.init(project="minigptv", name=cfg.run_cfg.job_name)
+        wandb.login(key="42fd65b18cdf9952acb1887dfafa43b9f025c8dc")
+        wandb.init(project="minigpt4", name=cfg.run_cfg.job_name)
         wandb.watch(model)
 
     runner = get_runner_class(cfg)(

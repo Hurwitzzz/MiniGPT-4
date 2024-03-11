@@ -15,7 +15,7 @@ model:
   # generation configs
   prompt: ""
 
-  llama_model: "/cluster/scratch/jiezcao/jiameng/minigpt_model/vicuna7b/"#TODO
+  llama_model: "/nfs/data2/jiameng/minigpt_model/vicuna7b/"
 
 preprocess:
     vis_processor:

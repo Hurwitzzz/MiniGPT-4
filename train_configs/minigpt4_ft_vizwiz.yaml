@@ -6,7 +6,7 @@ model:
   end_sym: "###"
   prompt_path: "prompts/alignment.txt"
   prompt_template: '###Human: {} ###Assistant: '
-  ckpt: "/cluster/scratch/jiezcao/jiameng/minigpt_model/prerained_minigpt4_7b.pth"
+  ckpt: "/nfs/data2/hewei/minigpt4/ckpt/prerained_minigpt4_7b.pth"
 
 
 datasets:
@@ -35,7 +35,7 @@ run:
   warmup_steps: 200
 
   seed: 42
-  output_dir: "/cluster/scratch/jiezcao/jiameng/minigpt_model/save_ckpt/vizwiz/"
+  output_dir: "/nfs/data2/hewei/minigpt4/output_ckpt/vizwiz/"
 
   amp: True
   resume_ckpt_path: null
@@ -49,4 +49,4 @@ run:
   distributed: True
 
   wandb_log: False
-  job_name: minigpt4_vizwiz
+  job_name: minigpt4_ft_vizwiz

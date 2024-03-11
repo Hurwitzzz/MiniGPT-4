@@ -6,12 +6,12 @@ model:
   end_sym: "###"
   prompt_path: "prompts/alignment.txt"
   prompt_template: '###Human: {} ###Assistant: '
-  ckpt: "/cluster/scratch/jiezcao/jiameng/minigpt_model/prerained_minigpt4_7b.pth"
+  ckpt: "/nfs/data2/hewei/minigpt4/ckpt/prerained_minigpt4_7b.pth"
 
 
 datasets:
-  gqa:
-    batch_size: 6
+  ok_vqa:
+    batch_size: 1
     vis_processor:
       train:
         name: "blip2_image_train"
@@ -35,10 +35,10 @@ run:
   warmup_steps: 200
 
   seed: 42
-  output_dir: "/cluster/scratch/jiezcao/jiameng/minigpt_model/save_ckpt/gqa/"
+  output_dir: "/nfs/data2/hewei/minigpt4/output_ckpt/okvqa/"
 
   amp: True
-  resume_ckpt_path: null  
+  resume_ckpt_path: null
 
   evaluate: False
   train_splits: ["train"]
@@ -49,4 +49,4 @@ run:
   distributed: True
 
   wandb_log: False
-  job_name: minigpt4_gqa
+  job_name: minigpt4_ok

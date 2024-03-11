@@ -5,7 +5,7 @@
 
 datasets:
   gqa:
-    data_dir: /cluster/scratch/jiezcao/jiameng/dataset/
+    data_dir: /nfs/data2/hewei/dataset/
     # data_dir: ${env.data_dir}/datasets
     data_type: images # [images|videos|features]
 
@@ -16,7 +16,7 @@ datasets:
           url:
               - https://storage.googleapis.com/sfr-vision-language-research/LAVIS/datasets/gqa/train_balanced_questions.json
           storage:
-              - /cluster/scratch/jiezcao/jiameng/dataset/gqa/train_balanced_questions.json
+              - /nfs/data2/hewei/dataset/gqa/anno/train_balanced_questions.json
 
       images:
-          storage: /cluster/scratch/jiezcao/jiameng/dataset/gqa/images
+          storage: /nfs/data2/hewei/dataset/gqa/images
